@@ -97,7 +97,7 @@ function SelectPlayers() {
   return (
     <div>
       <Header text={"Select Players"} />
-      <div className="content">
+      <div className="content" style={{ marginBottom: "60px" }}>
         <div
           style={{
             display: "inline-block",
@@ -112,7 +112,7 @@ function SelectPlayers() {
                 display: "flex",
                 flexWrap: "wrap",
                 flexDirection: "column",
-                height: "340px",
+                height: "360px",
                 gap: "10px",
               }}
             >

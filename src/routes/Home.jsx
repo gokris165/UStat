@@ -18,32 +18,24 @@ function Home() {
     localStorage.removeItem("team2");
     let stored = localStorage.getItem("playerNames");
     if (stored != null) setPlayerNames(JSON.parse(stored));
-
-    // change this later
-    setPlayerNames([
-      "Caleb",
-      "Charles",
-      "Chris",
-      "Dan",
-      "Isaac",
-      "Jake",
-      "Joe",
-      "Kevin",
-      "Krone",
-      "Lail",
-      "Linares",
-      "Mark",
-      "Novinsky",
-      "Raf",
-      "Roman",
-      "Ryan-Ph",
-      "Sakhin",
-      "Tanner",
-      "Ted",
-      "Vincent",
-      "X",
-    ]);
   }, []);
+
+  async function importNames() {
+    return fetch("http://10.0.0.65:7170/data/playerNames", {
+      method: "GET",
+      headers: {
+        Authorization: "Bearer temporary978234",
+      },
+    })
+      .then((payload) => payload.json())
+      .then((data) => {
+        if (!data || data.error == 1) console.log("Error:", data.message);
+        else {
+          setPlayerNames(data);
+          alert("Successfully imported player names!");
+        }
+      });
+  }
 
   function selectMode(e) {
     if (activeId) {
@@ -121,18 +113,67 @@ function Home() {
           >
             7v7
           </div>
-          {/* <div
-            id="button-tournament"
-            onClick={(e) => selectMode(e)}
-            data-mode="tournament"
-            data-playercount="7"
-            className="button"
-          >
-            Tourney
-          </div> */}
         </div>
       </div>
-      <NextPage action={onNext} />
+      <div style={{ float: "left" }}>
+        <div
+          onClick={() => {
+            navigate("/viewStats");
+          }}
+          style={{
+            color: "green",
+            border: "1px solid green",
+            fontSize: "25px",
+            fontWeight: "bold",
+            borderRadius: "15px",
+            padding: "5px 10px",
+            marginLeft: "20px",
+            cursor: "pointer",
+            backgroundColor: "#1A1A1A",
+          }}
+        >
+          View
+        </div>
+        <br />
+        <div
+          onClick={() => {
+            console.log("yoyo clicked");
+          }}
+          style={{
+            color: "green",
+            border: "1px solid green",
+            fontSize: "25px",
+            fontWeight: "bold",
+            borderRadius: "15px",
+            padding: "5px 10px",
+            marginLeft: "20px",
+            cursor: "pointer",
+            backgroundColor: "#1A1A1A",
+          }}
+        >
+          Send
+        </div>
+      </div>
+      <div style={{ float: "right" }}>
+        <div
+          onClick={() => importNames()}
+          style={{
+            color: "green",
+            border: "1px solid green",
+            fontSize: "25px",
+            fontWeight: "bold",
+            borderRadius: "15px",
+            padding: "5px 10px",
+            marginRight: "20px",
+            cursor: "pointer",
+            backgroundColor: "#1A1A1A",
+          }}
+        >
+          Import Names
+        </div>
+        <br />
+        <NextPage action={onNext} />
+      </div>
     </div>
   );
 }
