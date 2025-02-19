@@ -9,6 +9,7 @@ function Home() {
   const [activeId, setActiveId] = useState(null);
   const [playerNames, setPlayerNames] = useState(null);
   const [playerCount, setPlayerCount] = useState(null);
+  const authToken = "temporary978234";
 
   useEffect(() => {
     localStorage.removeItem("inProgress");
@@ -24,15 +25,51 @@ function Home() {
     return fetch("http://10.0.0.65:7170/data/playerNames", {
       method: "GET",
       headers: {
-        Authorization: "Bearer temporary978234",
+        Authorization: `Bearer ${authToken}`,
       },
     })
       .then((payload) => payload.json())
       .then((data) => {
-        if (!data || data.error == 1) console.log("Error:", data.message);
-        else {
-          setPlayerNames(data);
+        if (!data || data.error == 1) {
+          console.log("Error:", data.message);
+          alert("Failed to import player names!");
+        } else {
+          setPlayerNames(data.message);
+          localStorage.setItem("playerNames", JSON.stringify(data.message));
           alert("Successfully imported player names!");
+        }
+      });
+  }
+
+  async function sendStats() {
+    let stats = localStorage.getItem("stats");
+    if (!stats) {
+      alert("No stats available");
+      return;
+    }
+
+    let name = prompt("Enter name of reporter: ");
+    if (!name) {
+      alert("No name provided");
+      return;
+    }
+
+    return fetch(`http://10.0.0.65:7170/data/sendStats?name=${name}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: stats,
+    })
+      .then((payload) => payload.json())
+      .then((data) => {
+        if (!data || data.error == 1) {
+          console.log("Error:", data.message);
+          alert("Stats upload failed!");
+        } else {
+          alert("Successfully uploaded stats");
+          localStorage.removeItem("stats");
         }
       });
   }
@@ -136,9 +173,7 @@ function Home() {
         </div>
         <br />
         <div
-          onClick={() => {
-            console.log("yoyo clicked");
-          }}
+          onClick={() => sendStats()}
           style={{
             color: "green",
             border: "1px solid green",
