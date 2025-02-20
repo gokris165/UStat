@@ -21,7 +21,7 @@ const logger = winston.createLogger({
   ),
   transports: [
     new winston.transports.DailyRotateFile({
-      filename: "server\\logs\\log-%DATE%.txt",
+      filename: "server/logs/log-%DATE%.txt",
       handleExceptions: true,
       datePattern: "YYYY-MM-DD",
     }),
@@ -65,7 +65,7 @@ app.get("/data/playerNames", auth, (req, res) => {
   logger.info("requesting player names");
   try {
     const data = fs
-      .readFileSync("server\\playerNames.txt", "utf-8")
+      .readFileSync("server/playerNames.txt", "utf-8")
       .trim()
       .split("\r\n")
       .sort();
@@ -112,10 +112,10 @@ app.post("/data/sendStats", auth, express.json(), (req, res) => {
   // write stats to file
   try {
     // create data dir if it doesn't exist
-    if (!fs.existsSync("server\\data")) {
-      fs.mkdirSync("server\\data");
+    if (!fs.existsSync("server/data")) {
+      fs.mkdirSync("server/data");
     }
-    fs.writeFileSync(`server\\data\\${filename}`, fileContent);
+    fs.writeFileSync(`server/data/${filename}`, fileContent);
     logger.info(`Successfully saved stats from ${reporter} to file`);
   } catch (error) {
     logger.error(`Stats from ${reporter} couldn't be saved to file:`, error);
@@ -129,24 +129,24 @@ app.post("/data/sendStats", auth, express.json(), (req, res) => {
   try {
     logger.info("updating stats.txt");
     // create file if it doesn't exist
-    if (!fs.existsSync("server\\stats.txt")) {
+    if (!fs.existsSync("server/stats.txt")) {
       logger.info("stats.txt doesn't exist, creating it...");
       let newStats = "";
       const data = fs
-        .readFileSync("server\\playerNames.txt", "utf-8")
+        .readFileSync("server/playerNames.txt", "utf-8")
         .trim()
         .split("\r\n")
         .sort();
       for (let player of data) {
         newStats += `${player}\t0\t0\t0\t0\t0\n`;
       }
-      fs.writeFileSync("server\\stats.txt", newStats);
+      fs.writeFileSync("server/stats.txt", newStats);
       logger.info("created stats.txt with all 0 stats");
     }
     // read global stats
     let stats = {};
     const existingStats = fs
-      .readFileSync("server\\stats.txt", "utf-8")
+      .readFileSync("server/stats.txt", "utf-8")
       .trim()
       .split("\n");
     for (let line of existingStats) {
@@ -176,7 +176,7 @@ app.post("/data/sendStats", auth, express.json(), (req, res) => {
       let losses = stats[player].losses;
       statsContent += `${player}\t${turns}\t${assists}\t${goals}\t${wins}\t${losses}\n`;
     }
-    fs.writeFileSync("server\\stats.txt", statsContent);
+    fs.writeFileSync("server/stats.txt", statsContent);
     logger.info("successfully updated stats.txt");
   } catch (error) {
     console.log(error);
