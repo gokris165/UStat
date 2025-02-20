@@ -9,7 +9,7 @@ function Home() {
   const [activeId, setActiveId] = useState(null);
   const [playerNames, setPlayerNames] = useState(null);
   const [playerCount, setPlayerCount] = useState(null);
-  const authToken = "temporary978234";
+  const authToken = import.meta.env.VITE_TOKEN;
   const backendUrl = `http:\\\\${import.meta.env.VITE_BACKEND_HOST}:${
     import.meta.env.VITE_BACKEND_PORT
   }`;
