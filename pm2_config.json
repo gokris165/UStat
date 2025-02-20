@@ -1,0 +1,16 @@
+[
+  {
+    "name": "backend",
+    "script": "server\\server.js",
+    "time": true
+  },
+  {
+    "name": "frontend",
+    "script": "serve",
+    "time": true,
+    "env": {
+      "PM2_SERVE_PATH": "dist",
+      "PM2_SERVE_PORT": "3175"
+    }
+  }
+]
