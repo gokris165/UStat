@@ -1,7 +1,7 @@
 [
   {
     "name": "backend",
-    "script": "server\\server.js",
+    "script": "server/server.js",
     "time": true
   },
   {
