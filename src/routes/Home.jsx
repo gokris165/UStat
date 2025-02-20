@@ -10,6 +10,9 @@ function Home() {
   const [playerNames, setPlayerNames] = useState(null);
   const [playerCount, setPlayerCount] = useState(null);
   const authToken = "temporary978234";
+  const backendUrl = `http:\\\\${import.meta.env.VITE_BACKEND_HOST}:${
+    import.meta.env.VITE_BACKEND_PORT
+  }`;
 
   useEffect(() => {
     localStorage.removeItem("inProgress");
@@ -22,7 +25,7 @@ function Home() {
   }, []);
 
   async function importNames() {
-    return fetch("http://10.0.0.65:7170/data/playerNames", {
+    return fetch(`${backendUrl}/data/playerNames`, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${authToken}`,
@@ -54,7 +57,7 @@ function Home() {
       return;
     }
 
-    return fetch(`http://10.0.0.65:7170/data/sendStats?name=${name}`, {
+    return fetch(`${backendUrl}/data/sendStats?name=${name}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

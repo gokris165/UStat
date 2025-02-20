@@ -1,11 +1,14 @@
 import express from "express";
 import cors from "cors";
 import * as winston from "winston";
+import dotenv from "dotenv";
 import "winston-daily-rotate-file";
 import * as fs from "fs";
+
+dotenv.config({ path: ".env.local" });
 const app = express();
-const port = 7170;
-const token = "temporary978234";
+const port = process.env.VITE_BACKEND_PORT;
+const token = process.env.VITE_TOKEN;
 
 const logger = winston.createLogger({
   level: "info",
