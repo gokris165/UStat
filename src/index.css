@@ -65,11 +65,11 @@
   color: white !important;
 }
 .stat-box {
-  font-size: 30px;
+  font-size: 25px;
   font-weight: bold;
   border: 1px solid white;
   border-radius: 5px;
-  padding: 0px 15px;
+  padding: 0px 12px;
   margin-right: 10px;
   cursor: pointer;
 }

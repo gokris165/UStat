@@ -89,18 +89,20 @@ app.post("/data/sendStats", auth, express.json(), (req, res) => {
       message: "Name of stat reporter not provided!",
     });
   }
-  const reporter = req.query.name;
+  let reporter = req.query.name;
+  reporter = reporter.split(" ").join("_");
   logger.info(`${req.query.name} reported stats`);
 
   // process stats to writable file content
-  let fileContent = "Name\tT\tA\tG\tW\tL\n";
+  let fileContent = "Name\tT\tA\tG\tW\tL\tD\n";
   for (let player of Object.keys(req.body).sort()) {
     let turns = req.body[player].turns;
     let assists = req.body[player].assists;
     let goals = req.body[player].goals;
     let wins = req.body[player].wins;
     let losses = req.body[player].losses;
-    fileContent += `${player}\t${turns}\t${assists}\t${goals}\t${wins}\t${losses}\n`;
+    let defense = req.body[player].defense;
+    fileContent += `${player}\t${turns}\t${assists}\t${goals}\t${wins}\t${losses}\t${defense}\n`;
   }
 
   // create filename
@@ -125,63 +127,65 @@ app.post("/data/sendStats", auth, express.json(), (req, res) => {
     });
   }
 
-  // update stats.txt
-  try {
-    logger.info("updating stats.txt");
-    // create file if it doesn't exist
-    if (!fs.existsSync("server/stats.txt")) {
-      logger.info("stats.txt doesn't exist, creating it...");
-      let newStats = "";
-      const data = fs
-        .readFileSync("server/playerNames.txt", "utf-8")
-        .trim()
-        .split("\r\n")
-        .sort();
-      for (let player of data) {
-        newStats += `${player}\t0\t0\t0\t0\t0\n`;
-      }
-      fs.writeFileSync("server/stats.txt", newStats);
-      logger.info("created stats.txt with all 0 stats");
-    }
-    // read global stats
-    let stats = {};
-    const existingStats = fs
-      .readFileSync("server/stats.txt", "utf-8")
-      .trim()
-      .split("\n");
-    for (let line of existingStats) {
-      let stat = line.split("\t");
-      stats[stat[0]] = {};
-      stats[stat[0]].turns = parseInt(stat[1]);
-      stats[stat[0]].assists = parseInt(stat[2]);
-      stats[stat[0]].goals = parseInt(stat[3]);
-      stats[stat[0]].wins = parseInt(stat[4]);
-      stats[stat[0]].losses = parseInt(stat[5]);
-    }
-    // update global stats
-    for (let player in req.body) {
-      stats[player].turns += req.body[player].turns;
-      stats[player].assists += req.body[player].assists;
-      stats[player].goals += req.body[player].goals;
-      stats[player].wins += req.body[player].wins;
-      stats[player].losses += req.body[player].losses;
-    }
-    // write updated stats
-    let statsContent = "";
-    for (let player in stats) {
-      let turns = stats[player].turns;
-      let assists = stats[player].assists;
-      let goals = stats[player].goals;
-      let wins = stats[player].wins;
-      let losses = stats[player].losses;
-      statsContent += `${player}\t${turns}\t${assists}\t${goals}\t${wins}\t${losses}\n`;
-    }
-    fs.writeFileSync("server/stats.txt", statsContent);
-    logger.info("successfully updated stats.txt");
-  } catch (error) {
-    console.log(error);
-    logger.error(`Error while updating stats.txt: ${error.message}`);
-  }
+  // TODO: create a separate admin portal to manually choose which
+  // files will be used to create stats.txt
+  // // update stats.txt
+  // try {
+  //   logger.info("updating stats.txt");
+  //   // create file if it doesn't exist
+  //   if (!fs.existsSync("server/stats.txt")) {
+  //     logger.info("stats.txt doesn't exist, creating it...");
+  //     let newStats = "";
+  //     const data = fs
+  //       .readFileSync("server/playerNames.txt", "utf-8")
+  //       .trim()
+  //       .split("\r\n")
+  //       .sort();
+  //     for (let player of data) {
+  //       newStats += `${player}\t0\t0\t0\t0\t0\n`;
+  //     }
+  //     fs.writeFileSync("server/stats.txt", newStats);
+  //     logger.info("created stats.txt with all 0 stats");
+  //   }
+  //   // read global stats
+  //   let stats = {};
+  //   const existingStats = fs
+  //     .readFileSync("server/stats.txt", "utf-8")
+  //     .trim()
+  //     .split("\n");
+  //   for (let line of existingStats) {
+  //     let stat = line.split("\t");
+  //     stats[stat[0]] = {};
+  //     stats[stat[0]].turns = parseInt(stat[1]);
+  //     stats[stat[0]].assists = parseInt(stat[2]);
+  //     stats[stat[0]].goals = parseInt(stat[3]);
+  //     stats[stat[0]].wins = parseInt(stat[4]);
+  //     stats[stat[0]].losses = parseInt(stat[5]);
+  //   }
+  //   // update global stats
+  //   for (let player in req.body) {
+  //     stats[player].turns += req.body[player].turns;
+  //     stats[player].assists += req.body[player].assists;
+  //     stats[player].goals += req.body[player].goals;
+  //     stats[player].wins += req.body[player].wins;
+  //     stats[player].losses += req.body[player].losses;
+  //   }
+  //   // write updated stats
+  //   let statsContent = "";
+  //   for (let player in stats) {
+  //     let turns = stats[player].turns;
+  //     let assists = stats[player].assists;
+  //     let goals = stats[player].goals;
+  //     let wins = stats[player].wins;
+  //     let losses = stats[player].losses;
+  //     statsContent += `${player}\t${turns}\t${assists}\t${goals}\t${wins}\t${losses}\n`;
+  //   }
+  //   fs.writeFileSync("server/stats.txt", statsContent);
+  //   logger.info("successfully updated stats.txt");
+  // } catch (error) {
+  //   console.log(error);
+  //   logger.error(`Error while updating stats.txt: ${error.message}`);
+  // }
 
   res.json({ error: 0, message: "Successfully received stats" });
 });

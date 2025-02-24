@@ -20,12 +20,13 @@ function ViewStats() {
         <table style={{ fontSize: "20px", borderCollapse: "collapse" }}>
           <thead>
             <tr style={{ borderBottom: "1px solid grey" }}>
-              <th style={{ paddingRight: "60px" }}>Name</th>
-              <th style={{ paddingRight: "30px" }}>T</th>
-              <th style={{ paddingRight: "30px" }}>A</th>
-              <th style={{ paddingRight: "30px" }}>G</th>
-              <th style={{ paddingRight: "30px" }}>W</th>
-              <th>L</th>
+              <th style={{ paddingRight: "45px" }}>Name</th>
+              <th style={{ paddingRight: "25px" }}>T</th>
+              <th style={{ paddingRight: "25px" }}>A</th>
+              <th style={{ paddingRight: "25px" }}>G</th>
+              <th style={{ paddingRight: "25px" }}>D</th>
+              <th style={{ paddingRight: "22px" }}>W</th>
+              <th style={{ paddingRight: "10px" }}>L</th>
             </tr>
           </thead>
           <tbody>
@@ -39,6 +40,7 @@ function ViewStats() {
                     <td>{stats[player].turns}</td>
                     <td>{stats[player].assists}</td>
                     <td>{stats[player].goals}</td>
+                    <td>{stats[player].defense}</td>
                     <td>{stats[player].wins}</td>
                     <td>{stats[player].losses}</td>
                   </tr>

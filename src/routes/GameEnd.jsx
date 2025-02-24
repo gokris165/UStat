@@ -27,7 +27,7 @@ function GameEnd() {
 
   function onNext() {
     if (!winner) return;
-    console.log(winner);
+    // console.log(winner);
     // if a 'stats' object already exists, read it
     let statsObj = localStorage.getItem("stats");
     statsObj = statsObj ? JSON.parse(statsObj) : {};
@@ -36,7 +36,7 @@ function GameEnd() {
     // add entries or update entries in stats object
     updateStats(team1, "team1", statsObj);
     updateStats(team2, "team2", statsObj);
-    console.log(statsObj);
+    // console.log(statsObj);
     localStorage.setItem("stats", JSON.stringify(statsObj));
 
     // delete all other localstorage items
@@ -60,12 +60,14 @@ function GameEnd() {
           goals: 0,
           wins: 0,
           losses: 0,
+          defense: 0,
         };
         playerData = statsObj[teamArr[i]];
       }
       playerData["turns"] += inProgress["turns"][teamArr[i]];
       playerData["assists"] += inProgress["assists"][teamArr[i]];
       playerData["goals"] += inProgress["goals"][teamArr[i]];
+      playerData["defense"] += inProgress["defense"][teamArr[i]];
       if (winner == teamName) playerData["wins"] += 1;
       else playerData["losses"] += 1;
     }

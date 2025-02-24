@@ -12,6 +12,7 @@ function Stats() {
   const [turns, setTurns] = useState(null);
   const [assists, setAssists] = useState(null);
   const [goals, setGoals] = useState(null);
+  const [defense, setDefense] = useState(null);
   const [gameEnd, setGameEnd] = useState(false);
   const [currentPlayer, setCurrentPlayer] = useState(null);
 
@@ -26,20 +27,24 @@ function Stats() {
         setTurns(storedProgress.turns);
         setAssists(storedProgress.assists);
         setGoals(storedProgress.goals);
+        setDefense(storedProgress.defense);
       } else {
         // initialize turns
         let turnsObj = {};
         let assistsObj = {};
         let goalsObj = {};
+        let defenseObj = {};
         for (let player of [...storedTeam1, ...storedTeam2]) {
           turnsObj[player] = 0;
           assistsObj[player] = 0;
           goalsObj[player] = 0;
+          defenseObj[player] = 0;
         }
 
         setTurns(turnsObj);
         setAssists(assistsObj);
         setGoals(goalsObj);
+        setDefense(defenseObj);
       }
 
       storedTeam1.sort();
@@ -57,10 +62,15 @@ function Stats() {
   }, [team1]);
 
   useEffect(() => {
-    if (!turns || !assists || !goals) return;
-    let progress = { turns: turns, assists: assists, goals: goals };
+    if (!turns || !assists || !goals || !defense) return;
+    let progress = {
+      turns: turns,
+      assists: assists,
+      goals: goals,
+      defense: defense,
+    };
     localStorage.setItem("inProgress", JSON.stringify(progress));
-  }, [turns, assists, goals]);
+  }, [turns, assists, goals, defense]);
 
   function onPlayerClick(e) {
     let playerName = e.target.dataset["player"];
@@ -111,7 +121,7 @@ function Stats() {
   return (
     <div>
       <Header text={"Collect Stats"} />
-      <div className="content">
+      <div className="content" style={{ marginBottom: "50px" }}>
         {/* display player names */}
         <div style={{ display: "inline-block", width: "50%" }}>
           <h2 style={{ marginBottom: "5px" }}>Team 1</h2>
@@ -178,6 +188,15 @@ function Stats() {
             inc={() => inc(setGoals, currentPlayer)}
             dec={() => dec(setGoals, currentPlayer)}
             counter={goals && goals[currentPlayer] ? goals[currentPlayer] : 0}
+          />
+          {/* Defense */}
+          <StatCounter
+            title={"Defense"}
+            inc={() => inc(setDefense, currentPlayer)}
+            dec={() => dec(setDefense, currentPlayer)}
+            counter={
+              defense && defense[currentPlayer] ? defense[currentPlayer] : 0
+            }
           />
           {/* game end */}
           <br />
