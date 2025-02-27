@@ -31,13 +31,21 @@ function GameEnd() {
     // if a 'stats' object already exists, read it
     let statsObj = localStorage.getItem("stats");
     statsObj = statsObj ? JSON.parse(statsObj) : {};
-    console.log(statsObj);
+    let historyObj = { team1: {}, team2: {} };
+    // console.log(statsObj);
 
-    // add entries or update entries in stats object
-    updateStats(team1, "team1", statsObj);
-    updateStats(team2, "team2", statsObj);
+    // add entries or update entries in stats and history object
+    updateStats(team1, "team1", statsObj, historyObj);
+    updateStats(team2, "team2", statsObj, historyObj);
     // console.log(statsObj);
     localStorage.setItem("stats", JSON.stringify(statsObj));
+
+    // populate history localstorage item
+    // console.log(historyObj);
+    let history = localStorage.getItem("history");
+    history = history ? JSON.parse(history) : [];
+    history.push(historyObj);
+    localStorage.setItem("history", JSON.stringify(history));
 
     // delete all other localstorage items
     localStorage.removeItem("inProgress");
@@ -50,7 +58,7 @@ function GameEnd() {
     navigate("/");
   }
 
-  function updateStats(teamArr, teamName, statsObj) {
+  function updateStats(teamArr, teamName, statsObj, historyObj) {
     for (let i = 0; i < teamArr.length; i++) {
       let playerData = statsObj[teamArr[i]];
       if (!playerData) {
@@ -64,6 +72,16 @@ function GameEnd() {
         };
         playerData = statsObj[teamArr[i]];
       }
+      historyObj[teamName][teamArr[i]] = {};
+      historyObj[teamName][teamArr[i]]["turns"] =
+        inProgress["turns"][teamArr[i]];
+      historyObj[teamName][teamArr[i]]["assists"] =
+        inProgress["assists"][teamArr[i]];
+      historyObj[teamName][teamArr[i]]["goals"] =
+        inProgress["goals"][teamArr[i]];
+      historyObj[teamName][teamArr[i]]["defense"] =
+        inProgress["defense"][teamArr[i]];
+
       playerData["turns"] += inProgress["turns"][teamArr[i]];
       playerData["assists"] += inProgress["assists"][teamArr[i]];
       playerData["goals"] += inProgress["goals"][teamArr[i]];

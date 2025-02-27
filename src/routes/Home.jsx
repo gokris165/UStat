@@ -46,8 +46,13 @@ function Home() {
 
   async function sendStats() {
     let stats = localStorage.getItem("stats");
+    let history = localStorage.getItem("history");
     if (!stats) {
       alert("No stats available");
+      return;
+    }
+    if (!history) {
+      alert("No history available");
       return;
     }
 
@@ -63,16 +68,20 @@ function Home() {
         "Content-Type": "application/json",
         Authorization: `Bearer ${authToken}`,
       },
-      body: stats,
+      body: JSON.stringify({
+        stats: JSON.parse(stats),
+        history: JSON.parse(history),
+      }),
     })
       .then((payload) => payload.json())
       .then((data) => {
         if (!data || data.error == 1) {
           console.log("Error:", data.message);
-          alert("Stats upload failed!");
+          alert("Upload failed!");
         } else {
-          alert("Successfully uploaded stats");
+          alert("Success!");
           localStorage.removeItem("stats");
+          localStorage.removeItem("history");
         }
       });
   }

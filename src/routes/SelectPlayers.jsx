@@ -70,7 +70,6 @@ function SelectPlayers() {
   }
 
   function onNextTeamClicked(e) {
-    console.log(e);
     if (e.target.dataset["active"] === "0") {
       e.target.classList.add("next-team-active");
       e.target.dataset["active"] = "1";
