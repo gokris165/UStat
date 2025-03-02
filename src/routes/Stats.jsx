@@ -15,6 +15,8 @@ function Stats() {
   const [defense, setDefense] = useState(null);
   const [gameEnd, setGameEnd] = useState(false);
   const [currentPlayer, setCurrentPlayer] = useState(null);
+  const [team1Score, setTeam1Score] = useState(0);
+  const [team2Score, setTeam2Score] = useState(0);
 
   useEffect(() => {
     try {
@@ -85,6 +87,10 @@ function Stats() {
   }
 
   function inc(setAttr, player) {
+    if (setAttr == setGoals) {
+      if (team1.includes(player)) setTeam1Score((prev) => prev + 1);
+      else setTeam2Score((prev) => prev + 1);
+    }
     setAttr((prev) => {
       let newobj = { ...prev };
       newobj[player] += 1;
@@ -93,6 +99,10 @@ function Stats() {
   }
 
   function dec(setAttr, player) {
+    if (setAttr == setGoals) {
+      if (team1.includes(player)) setTeam1Score((prev) => prev - 1);
+      else setTeam2Score((prev) => prev - 1);
+    }
     setAttr((prev) => {
       let newobj = { ...prev };
       newobj[player] -= 1;
@@ -124,7 +134,9 @@ function Stats() {
       <div className="content" style={{ marginBottom: "50px" }}>
         {/* display player names */}
         <div style={{ display: "inline-block", width: "50%" }}>
-          <h2 style={{ marginBottom: "5px" }}>Team 1</h2>
+          <h2 style={{ marginBottom: "5px" }}>
+            Team 1<span style={{ fontWeight: "200" }}>: {team1Score}</span>
+          </h2>
           {team1 &&
             team1.map((name) => {
               return (
@@ -141,7 +153,9 @@ function Stats() {
               );
             })}
 
-          <h2 style={{ marginBottom: "5px" }}>Team 2</h2>
+          <h2 style={{ marginBottom: "5px" }}>
+            Team 2<span style={{ fontWeight: "200" }}>: {team2Score}</span>
+          </h2>
           {team2 &&
             team2.map((name) => {
               return (
